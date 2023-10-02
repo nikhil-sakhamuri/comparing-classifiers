@@ -1,8 +1,15 @@
-# comparing-classifiers
+# Comparing-classifiers
 Comparing the performance of 4 different classifiers on marketing campaign data from banks
 
+### Project Overview: 
 Here I am comparing the performance of 4 different classifiers (k-nearest neighbors, logistic regression, decision trees, and support vector machines) on the data of marketing campaigns from a Portuguese banking institution. The business objective here is to find a model that can explain the success of a contact (whether or not the client subscribes to the deposit). This will help marketing campaign efficiency by identifying the main characteristics that effect the success of a campaign and helping to better manage limited resources around the set of customers most likely to purchase the deposit.
 
+### Results and Next Steps:
 I would recommend that the bank use an SVM classifier to help a marketing campaign target specific customers that are more likely to subscribe to term deposits. Although the SVM classifier took by far the longest to train, it had a slightly higher overall prediction accuracy on the test set of data, correctly classifying 90% of the test set. Digging deeper, the SVM had a stronger recall score than the other 3 models, meaning that it identified more of the subcribing customers than the other models. This is the most useful metric for a bank as it will help them gain the most subcribers to their term deposits. The other models, were more likely to classify subcribing customers as non-subscribing customers, thereby losing business for the bank.
 
 The main problem with this dataset is that the classes are extremely unbalanced, as show in my histogram in the Jupyter Notebook.. This leads to a majority of predictions for each model to be a "negative" or that the customer would not subscribe. A way to get around this would be to create a new dataset, sampling from the original dataset in such a way to even out the proportion between classes. I would recommend doing this and fitting each of these classifier to this new dataset and seeing if predictive performance in terms of recall and precision is improved.
+
+### Methodology:
+For my final model analysis, I started off by preprocessing the data. I created a column transformer object that used a One-Hot-Encoder on the categorical variables, and then a Scaler and Polynomial Transformer (with degree 2) on the numerical variables. Next, I built a pipeline object for each of the 4 classifiers (adding a Reverse Feature select step for the Logistic Regression pipeline). Finally, for each pipeline object I declared a dictionary of hyperparameters to optimize and built a GridSearchCV object with the pipeline and respective parameter grid. Each GridSearchCV object optimized the hyperparameters that I declared for each model and produced the results described above. The optimal parameters for each model are described in the accompanying Jupyter notebook. 
+
+After finding the optimized model for each classifier, I made a plot of their respective recall and precision scores which was helpful in identifying the SVM model as the best one. Interestingly, it also showed the the optimal DecisionTree model was no better than a dummy classifier! It simply predicted 0 for all inputs which led to a decent accuracy score (due to the unbalanced classes described above) but a recall and precision score of 0. 
